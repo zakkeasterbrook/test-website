@@ -1,8 +1,8 @@
 'use strict';
 
 const SOURCES = [
-  'https://mempool.space/api/blocks?limit=4',
-  'https://blockstream.info/api/blocks?limit=4'
+  'https://mempool.space/api/blocks?limit=6',
+  'https://blockstream.info/api/blocks?limit=6'
 ];
 
 const clockHand = document.getElementById('clockHand');
@@ -12,6 +12,7 @@ const lastAgoEl = document.getElementById('lastAgo');
 const etaEl = document.getElementById('eta');
 const refreshBtn = document.getElementById('refresh');
 const ticksEl = document.getElementById('ticks');
+const feedEl = document.getElementById('blockFeed');
 
 const TEN_MINUTES_MS = 10 * 60 * 1000;
 let averageBlockMs = TEN_MINUTES_MS;
@@ -49,13 +50,20 @@ async function fetchBlocks() {
       const blocks = (data ?? [])
         .filter((block) => Number.isFinite(block.timestamp) && block.height)
         .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, 4);
+        .slice(0, 6);
       if (blocks.length >= 2) return blocks;
     } catch (err) {
       console.warn('Block source failed', url, err);
     }
   }
   throw new Error('All block sources failed');
+}
+
+function renderFeed(blocks) {
+  feedEl.innerHTML = blocks.map((block) => {
+    const minutesAgo = Math.round((Date.now() - block.timestamp * 1000) / 60000);
+    return `<div class="item"><span>#${block.height}</span><span>${minutesAgo}m ago</span></div>`;
+  }).join('');
 }
 
 async function fetchData() {
@@ -75,12 +83,15 @@ async function fetchData() {
     lastBlockEl.textContent = `#${blocks[0].height}`;
     const minutesAgo = Math.round((Date.now() - blocks[0].timestamp * 1000) / 60000);
     lastAgoEl.textContent = `${minutesAgo} min ago`;
+
+    renderFeed(blocks);
   } catch (err) {
     console.error(err);
     avgTimeEl.textContent = 'unavailable';
     lastBlockEl.textContent = '—';
     lastAgoEl.textContent = '—';
     etaEl.textContent = '—';
+    feedEl.innerHTML = '<div class="item">Feed unavailable</div>';
   } finally {
     refreshBtn.disabled = false;
   }

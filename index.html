@@ -3,38 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bitcoin Block Pulse</title>
+  <title>BlockPulse — Bitcoin Heartbeat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="banner">⚡ Live Bitcoin Block Pulse</header>
-  <main>
-    <section class="card-grid">
-      <div class="card">
+  <div class="bg-grid"></div>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Live feed</p>
+      <h1>Bitcoin’s heartbeat</h1>
+      <p>Every sweep covers the target 10 minute block window. Watch the dial race when miners surge and drag when the network throttles.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
         <p>Rolling average</p>
         <strong id="avgTime">—</strong>
       </div>
-      <div class="card">
+      <div class="stat-card">
         <p>Last block</p>
         <strong id="lastBlock">—</strong>
         <small id="lastAgo">—</small>
       </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="dial-shell">
+      <div class="glow"></div>
+      <div class="dial">
+        <div id="ticks"></div>
+        <div class="hand" id="clockHand"></div>
+        <div class="center"></div>
+      </div>
+      <p class="eta">Next block ETA: <strong id="eta">—</strong></p>
+      <button id="refresh">Refresh data</button>
     </section>
 
-    <div class="dial">
-      <div id="ticks"></div>
-      <div class="hand" id="clockHand"></div>
-      <div class="center"></div>
-    </div>
-
-    <p class="eta">Next block ETA: <strong id="eta">—</strong></p>
-    <button id="refresh">Refresh data</button>
+    <section class="feed" id="blockFeed"></section>
   </main>
-
-  <footer>Built for Zakk — pure clock mode</footer>
+  <footer>Built for Zakk — BlockPulse v3</footer>
   <script type="module" src="script.js"></script>
 </body>
 </html>

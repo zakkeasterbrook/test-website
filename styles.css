@@ -1,59 +1,102 @@
 body {
   margin: 0;
   font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #06030a;
+  background: radial-gradient(circle at top left, rgba(109, 229, 255, 0.2), transparent 40%), #05060a;
   color: #fefcff;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.hero {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 2rem 1rem;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 2rem;
   align-items: center;
 }
 
-.banner {
-  width: 100%;
-  text-align: center;
-  padding: 1rem;
-  background: #ff6b00;
-  color: #050307;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-}
-
-main {
-  width: min(480px, 90vw);
-  padding: 2.5rem 1rem;
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1rem;
-  border-radius: 1rem;
-  text-align: center;
-}
-
-.card strong {
-  font-size: 1.8rem;
-}
-
-.card small {
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
   color: rgba(255, 255, 255, 0.6);
 }
 
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin: 0.4rem 0;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.2rem;
+  padding: 1.2rem;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.stat-card strong {
+  font-size: 1.9rem;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dial-shell {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  padding: 2rem 1rem 2.5rem;
+  text-align: center;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  background: radial-gradient(circle, rgba(0, 175, 255, 0.2), transparent 60%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
 .dial {
-  width: 260px;
+  width: min(320px, 70vw);
   aspect-ratio: 1;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   margin: 0 auto 1.5rem;
   position: relative;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 70%);
 }
 
 #ticks span {
@@ -71,45 +114,59 @@ main {
   position: absolute;
   width: 4px;
   height: 40%;
-  left: 50%;
-  bottom: 50%;
   transform-origin: bottom center;
   transform: translate(-50%, -100%) rotate(0deg);
-  background: linear-gradient(180deg, #7cf7ff, #00b6ff);
+  left: 50%;
+  bottom: 50%;
   border-radius: 999px;
+  background: linear-gradient(180deg, #72fff5, #00c2ff);
 }
 
 .center {
   position: absolute;
-  width: 16px;
-  height: 16px;
-  background: #fff;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
+  background: #fff;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
 .eta {
-  text-align: center;
   font-size: 1.2rem;
-  margin-bottom: 1rem;
 }
 
 button {
-  width: 100%;
-  padding: 0.9rem;
+  margin-top: 1rem;
   border: none;
-  border-radius: 0.9rem;
-  background: #00b6ff;
-  color: #050307;
+  border-radius: 999px;
+  padding: 0.9rem 1.6rem;
+  background: linear-gradient(120deg, #00c2ff, #3df8ff);
+  color: #05060a;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.feed .item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
 footer {
-  width: 100%;
   text-align: center;
   padding: 1rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
