@@ -13,16 +13,19 @@ const etaEl = document.getElementById('eta');
 const refreshBtn = document.getElementById('refresh');
 const ticksEl = document.getElementById('ticks');
 const feedEl = document.getElementById('blockFeed');
+const tickerEl = document.getElementById('ticker');
 
 const TEN_MINUTES_MS = 10 * 60 * 1000;
 let averageBlockMs = TEN_MINUTES_MS;
 let nextBlockEta = Date.now() + TEN_MINUTES_MS;
+let lastBlocks = [];
 
-const tickCount = 60;
+const tickCount = 120;
 if (!ticksEl.hasChildNodes()) {
   for (let i = 0; i < tickCount; i += 1) {
     const tick = document.createElement('span');
     tick.style.transform = `rotate(${i * (360 / tickCount)}deg)`;
+    tick.style.opacity = i % 10 === 0 ? '0.6' : '0.25';
     ticksEl.appendChild(tick);
   }
 }
@@ -30,13 +33,16 @@ if (!ticksEl.hasChildNodes()) {
 function updateDial() {
   const now = Date.now();
   const elapsed = now - (nextBlockEta - averageBlockMs);
-  const fraction = Math.max(0, Math.min(1, elapsed / averageBlockMs));
+  const rawFraction = elapsed / averageBlockMs;
+  const fraction = ((rawFraction % 1) + 1) % 1;
   const degrees = fraction * 360;
   clockHand.style.transform = `translate(-50%, -100%) rotate(${degrees}deg)`;
-  const remaining = Math.max(0, nextBlockEta - now);
-  const m = Math.floor(remaining / 60000);
-  const s = Math.floor((remaining % 60000) / 1000);
+
+  const remaining = nextBlockEta - now;
+  const m = Math.max(0, Math.floor(remaining / 60000));
+  const s = Math.max(0, Math.floor((remaining % 60000) / 1000));
   etaEl.textContent = `${m}m ${s.toString().padStart(2, '0')}s`;
+
   requestAnimationFrame(updateDial);
 }
 requestAnimationFrame(updateDial);
@@ -66,10 +72,20 @@ function renderFeed(blocks) {
   }).join('');
 }
 
+function updateTicker(blocks) {
+  if (!tickerEl) return;
+  const snippets = blocks.slice(0, 3).map((block) => `#${block.height}`);
+  tickerEl.textContent = `Blocks streaming: ${snippets.join(' • ')} • Avg ${(
+    averageBlockMs /
+    60000
+  ).toFixed(2)} min`;
+}
+
 async function fetchData() {
   try {
     refreshBtn.disabled = true;
     const blocks = await fetchBlocks();
+    lastBlocks = blocks;
 
     const intervals = [];
     for (let i = 0; i < blocks.length - 1; i += 1) {
@@ -85,6 +101,7 @@ async function fetchData() {
     lastAgoEl.textContent = `${minutesAgo} min ago`;
 
     renderFeed(blocks);
+    updateTicker(blocks);
   } catch (err) {
     console.error(err);
     avgTimeEl.textContent = 'unavailable';
@@ -92,6 +109,7 @@ async function fetchData() {
     lastAgoEl.textContent = '—';
     etaEl.textContent = '—';
     feedEl.innerHTML = '<div class="item">Feed unavailable</div>';
+    if (tickerEl) tickerEl.textContent = 'Data feed unavailable';
   } finally {
     refreshBtn.disabled = false;
   }
