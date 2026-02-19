@@ -1,15 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Bitcoin Block Clock</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitcoin Block Clock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="clock">
-        <div class="hand" id="clockHand"></div>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="eyebrow">On-chain tempo</p>
+      <h1>Bitcoin block time, visualized</h1>
+      <p class="lede">
+        Every tick on this dial represents one minute inside the 10‑minute Bitcoin block target. The hand sweeps based
+        on the latest block data, updating as the network breathes.
+      </p>
+      <div class="stats">
+        <div class="stat-card">
+          <p class="label">Average block time</p>
+          <p class="value" id="avgTime">—</p>
+        </div>
+        <div class="stat-card">
+          <p class="label">Last block</p>
+          <p class="value" id="lastBlock">—</p>
+        </div>
+        <div class="stat-card">
+          <p class="label">ETA next block</p>
+          <p class="value" id="eta">—</p>
+        </div>
+      </div>
     </div>
-    <script src="script.js"></script>
+    <div class="hero__visual">
+      <div class="clock">
+        <div class="clock__hand" id="clockHand"></div>
+        <div class="clock__center"></div>
+        <div class="clock__ticks" id="ticks"></div>
+        <div class="clock__label">10 min block</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="info">
+    <article>
+      <h2>How it works</h2>
+      <p>
+        The site polls public blockchain endpoints for the latest block height and average interval. The result drives a
+        continuously updating sweep hand and countdown so you can feel the cadence of Bitcoin's heartbeat.
+      </p>
+    </article>
+    <article>
+      <h2>Network drift</h2>
+      <p>
+        When blocks are faster than the 10-minute target, difficulty ratchets up; when they lag, difficulty eases. The
+        clock dramatizes that drift so traders, miners, and curious onlookers get instant intuition.
+      </p>
+    </article>
+  </section>
+
+  <footer>
+    <p>
+      Built by Satoshi ⚡ — data from <a href="https://www.blockchain.com/explorer/api/blockchain_api" target="_blank" rel="noreferrer">Blockchain.com</a>.
+    </p>
+  </footer>
+
+  <script src="script.js" type="module"></script>
 </body>
 </html>
