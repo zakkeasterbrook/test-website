@@ -1,5 +1,10 @@
 'use strict';
 
+const SOURCES = [
+  'https://mempool.space/api/blocks?limit=4',
+  'https://blockstream.info/api/blocks?limit=4'
+];
+
 const clockHand = document.getElementById('clockHand');
 const avgTimeEl = document.getElementById('avgTime');
 const lastBlockEl = document.getElementById('lastBlock');
@@ -7,11 +12,6 @@ const lastAgoEl = document.getElementById('lastAgo');
 const etaEl = document.getElementById('eta');
 const refreshBtn = document.getElementById('refresh');
 const ticksEl = document.getElementById('ticks');
-
-const API = {
-  avgInterval: 'https://blockchain.info/q/interval?cors=true',
-  latestBlock: 'https://blockchain.info/latestblock?cors=true'
-};
 
 const TEN_MINUTES_MS = 10 * 60 * 1000;
 let averageBlockMs = TEN_MINUTES_MS;
@@ -40,32 +40,47 @@ function updateDial() {
 }
 requestAnimationFrame(updateDial);
 
+async function fetchBlocks() {
+  for (const url of SOURCES) {
+    try {
+      const res = await fetch(url, { cache: 'no-cache' });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const blocks = (data ?? [])
+        .filter((block) => Number.isFinite(block.timestamp) && block.height)
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 4);
+      if (blocks.length >= 2) return blocks;
+    } catch (err) {
+      console.warn('Block source failed', url, err);
+    }
+  }
+  throw new Error('All block sources failed');
+}
+
 async function fetchData() {
   try {
     refreshBtn.disabled = true;
-    const [avgRes, latestRes] = await Promise.all([
-      fetch(API.avgInterval, { cache: 'no-cache' }),
-      fetch(API.latestBlock, { cache: 'no-cache' })
-    ]);
-    if (!avgRes.ok || !latestRes.ok) throw new Error('Network error');
+    const blocks = await fetchBlocks();
 
-    const avgSeconds = parseFloat(await avgRes.text());
-    const latest = await latestRes.json();
+    const intervals = [];
+    for (let i = 0; i < blocks.length - 1; i += 1) {
+      intervals.push((blocks[i].timestamp - blocks[i + 1].timestamp) * 1000);
+    }
+    const observedAvg = intervals.reduce((sum, val) => sum + val, 0) / intervals.length;
+    averageBlockMs = Number.isFinite(observedAvg) && observedAvg > 0 ? observedAvg : TEN_MINUTES_MS;
+    nextBlockEta = (blocks[0].timestamp * 1000) + averageBlockMs;
 
-    averageBlockMs = avgSeconds * 1000;
-    nextBlockEta = (latest.time * 1000) + averageBlockMs;
-
-    avgTimeEl.textContent = `${(avgSeconds / 60).toFixed(2)} min`;
-    lastBlockEl.textContent = `#${latest.height}`;
-    const minutesAgo = Math.round((Date.now() - latest.time * 1000) / 60000);
+    avgTimeEl.textContent = `${(averageBlockMs / 60000).toFixed(2)} min`;
+    lastBlockEl.textContent = `#${blocks[0].height}`;
+    const minutesAgo = Math.round((Date.now() - blocks[0].timestamp * 1000) / 60000);
     lastAgoEl.textContent = `${minutesAgo} min ago`;
-    statusEl?.textContent = 'Live';
   } catch (err) {
     console.error(err);
     avgTimeEl.textContent = 'unavailable';
     lastBlockEl.textContent = '—';
+    lastAgoEl.textContent = '—';
     etaEl.textContent = '—';
-    statusEl?.textContent = 'Error fetching data';
   } finally {
     refreshBtn.disabled = false;
   }
