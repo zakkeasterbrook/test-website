@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Block Clock — Live BTC Block Pace</title>
+  <title>Bitcoin Block Pulse</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <header class="banner">⚡ Live Bitcoin Block Pulse</header>
   <main>
-    <h1>Bitcoin Block Pace</h1>
-    <section class="stats">
-      <div class="stat-card">
+    <section class="card-grid">
+      <div class="card">
         <p>Rolling average</p>
         <strong id="avgTime">—</strong>
       </div>
-      <div class="stat-card">
+      <div class="card">
         <p>Last block</p>
         <strong id="lastBlock">—</strong>
         <small id="lastAgo">—</small>
@@ -29,11 +29,12 @@
       <div class="hand" id="clockHand"></div>
       <div class="center"></div>
     </div>
-    <p class="eta">Next block ETA: <strong id="eta">—</strong></p>
 
-    <button id="refresh">Refresh now</button>
+    <p class="eta">Next block ETA: <strong id="eta">—</strong></p>
+    <button id="refresh">Refresh data</button>
   </main>
 
+  <footer>Built for Zakk — pure clock mode</footer>
   <script type="module" src="script.js"></script>
 </body>
 </html>

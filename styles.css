@@ -1,54 +1,67 @@
 body {
   margin: 0;
   font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #050307;
-  color: #f4f0ff;
+  background: #06030a;
+  color: #fefcff;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+}
+
+.banner {
+  width: 100%;
+  text-align: center;
+  padding: 1rem;
+  background: #ff6b00;
+  color: #050307;
+  font-weight: 600;
+  letter-spacing: 0.1em;
 }
 
 main {
   width: min(480px, 90vw);
-  padding: 2rem 1.5rem 3rem;
+  padding: 2.5rem 1rem;
 }
 
-h1 {
-  font-size: 1.9rem;
-  margin-bottom: 1rem;
-}
-
-.stats {
+.card-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   margin-bottom: 2rem;
 }
 
-.stat-card {
+.card {
   background: rgba(255, 255, 255, 0.05);
   padding: 1rem;
   border-radius: 1rem;
   text-align: center;
 }
 
+.card strong {
+  font-size: 1.8rem;
+}
+
+.card small {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .dial {
   width: 260px;
   aspect-ratio: 1;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   margin: 0 auto 1.5rem;
   position: relative;
-  box-shadow: 0 30px 50px rgba(0, 0, 0, 0.35); 
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
 }
 
 #ticks span {
   position: absolute;
   width: 3px;
   height: 20%;
-  left: 50%;
   top: 10%;
+  left: 50%;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 999px;
   transform-origin: bottom center;
@@ -58,11 +71,11 @@ h1 {
   position: absolute;
   width: 4px;
   height: 40%;
-  background: linear-gradient(180deg, #7cf7ff, #00c8ff);
-  transform-origin: bottom center;
-  transform: translate(-50%, -100%) rotate(0deg);
   left: 50%;
   bottom: 50%;
+  transform-origin: bottom center;
+  transform: translate(-50%, -100%) rotate(0deg);
+  background: linear-gradient(180deg, #7cf7ff, #00b6ff);
   border-radius: 999px;
 }
 
@@ -72,27 +85,31 @@ h1 {
   height: 16px;
   background: #fff;
   border-radius: 50%;
-  left: 50%;
   top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }
 
 .eta {
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
 }
 
 button {
+  width: 100%;
+  padding: 0.9rem;
   border: none;
-  border-radius: 999px;
-  padding: 0.8rem 1.4rem;
-  background: #00c8ff;
+  border-radius: 0.9rem;
+  background: #00b6ff;
   color: #050307;
   font-size: 1rem;
   cursor: pointer;
 }
 
-button:disabled {
-  opacity: 0.6;
-  cursor: wait;
+footer {
+  width: 100%;
+  text-align: center;
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.6);
 }
